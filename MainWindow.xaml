@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WinCmdTab"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
-        SizeToContent="WidthAndHeight"  WindowStyle="None" 
+        SizeToContent="WidthAndHeight"  WindowStyle="None" ShowInTaskbar="false"
    
     WindowStartupLocation="CenterScreen">
     <Window.Resources>
