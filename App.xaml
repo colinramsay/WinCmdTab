@@ -1,7 +1,7 @@
-﻿<Application x:Class="MyWPFApp.App"
+﻿<Application x:Class="WinCmdTab.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MyWPFApp"
+             xmlns:local="clr-namespace:WinCmdTab"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

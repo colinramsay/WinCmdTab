@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace MyWPFApp
+namespace WinCmdTab
 {
     class KeyboardState
 

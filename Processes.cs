@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 
-namespace MyWPFApp
+namespace WinCmdTab
 {
     public class Processes : ObservableCollection<DesktopWindow>
     {
