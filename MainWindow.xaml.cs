@@ -14,7 +14,6 @@ namespace WinCmdTab
     /// </summary>
     public partial class MainWindow : Window
     {
-        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
@@ -23,18 +22,18 @@ namespace WinCmdTab
             {
                 {Combination.FromString("Alt+A"), HotkeyPressed},
             });
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 200);
+
+            this.KeyUp += new KeyEventHandler(onKeyUp);
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void onKeyUp(object sender, KeyEventArgs e)
         {
-            Console.WriteLine("Any key pressed? {0}", Keyboard.IsKeyUp(Key.LeftAlt));
-            if (Keyboard.IsKeyUp(Key.LeftAlt))
+            Console.WriteLine("Keyup");
+
+            if (e.Key == Key.LeftAlt)
             {
-                Console.WriteLine("no keys pressed");
                 this.Hide();
-                dispatcherTimer.Stop();
+
 
                 if (lbTodoList.SelectedItem != null)
                 {
@@ -62,7 +61,7 @@ namespace WinCmdTab
 
                 lbTodoList.SelectedIndex = 1;
 
-                dispatcherTimer.Start();
+                // dispatcherTimer.Start();
             }
             // If the window is already visible:
             // - Move to next item in list
