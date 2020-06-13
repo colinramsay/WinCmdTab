@@ -38,6 +38,7 @@ public class WinAPI
         var activatedHandle = GetForegroundWindow();
         if (activatedHandle == IntPtr.Zero)
         {
+            Console.WriteLine("No window is activated");
             return false;       // No window is currently activated
         }
 ;

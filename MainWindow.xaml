@@ -27,6 +27,6 @@
 
     <StackPanel>
         <ListBox Width="200" IsSynchronizedWithCurrentItem="True" Name="lbTodoList"
-             ItemsSource="{Binding Source={StaticResource MyFriends}}"  SelectionChanged="lbTodoList_SelectionChanged"/>
+             ItemsSource="{Binding Source={StaticResource MyFriends}}" />
     </StackPanel>
 </Window>

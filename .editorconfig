@@ -1,0 +1,5 @@
+[obj/**.cs]
+generated_code = true
+
+[bin/**.cs]
+generated_code = true

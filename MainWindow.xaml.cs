@@ -2,19 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Gma.System.MouseKeyHook;
 
 namespace WinCmdTab
 {
@@ -23,28 +14,23 @@ namespace WinCmdTab
     /// </summary>
     public partial class MainWindow : Window
     {
-        private KeyboardHook _kh;
-
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
 
-            _kh = new KeyboardHook(this, VirtualKeyCodes.A, ModifierKeyCodes.Alt);
-            _kh.Triggered += () => DoWork();
-
-
+            Hook.GlobalEvents().OnCombination(new Dictionary<Combination, Action>
+            {
+                {Combination.FromString("Alt+A"), HotkeyPressed},
+            });
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
-
-
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 200);
         }
-
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            Console.WriteLine(KeyboardState.AnyKeyPressed());
-            if (!KeyboardState.AnyKeyPressed())
+            Console.WriteLine("Any key pressed? {0}", Keyboard.IsKeyUp(Key.LeftAlt));
+            if (Keyboard.IsKeyUp(Key.LeftAlt))
             {
                 Console.WriteLine("no keys pressed");
                 this.Hide();
@@ -62,10 +48,13 @@ namespace WinCmdTab
             }
         }
 
-
-        private void DoWork()
+        private void HotkeyPressed()
         {
-            Console.WriteLine("press %o" + WinAPI.ApplicationIsActivated(Process.GetCurrentProcess().Id));
+            Console.WriteLine("Press detected. Window activated? {0}", WinAPI.ApplicationIsActivated(Process.GetCurrentProcess().Id));
+
+            // If the window is not already visible:
+            // - make it visble/foregrounded
+            // - ensure the **second** item in the list (index = 1) is selected
             if (!WinAPI.ApplicationIsActivated(Process.GetCurrentProcess().Id))
             {
                 this.Show();
@@ -73,13 +62,13 @@ namespace WinCmdTab
 
                 lbTodoList.SelectedIndex = 1;
 
-                //lbTodoList.ItemsSource = DesktopWindow.GetAll();
-
                 dispatcherTimer.Start();
             }
+            // If the window is already visible:
+            // - Move to next item in list
+            // - Or, if at last item, wrap back round to the first item 
             else
             {
-                //Send(Key.Tab);
                 if (lbTodoList.SelectedIndex == lbTodoList.Items.Count - 1)
                 {
                     lbTodoList.SelectedIndex = 0;
@@ -90,37 +79,5 @@ namespace WinCmdTab
                 }
             }
         }
-        public void Send(Key key)
-        {
-            Console.WriteLine("send");
-            if (Keyboard.PrimaryDevice != null)
-            {
-
-                if (Keyboard.PrimaryDevice.ActiveSource != null)
-                {
-
-                    var e = new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, key)
-                    {
-                        RoutedEvent = Keyboard.KeyDownEvent
-                    };
-                    InputManager.Current.ProcessInput(e);
-
-                    // Note: Based on your requirements you may also need to fire events for:
-                    // RoutedEvent = Keyboard.PreviewKeyDownEvent
-                    // RoutedEvent = Keyboard.KeyUpEvent
-                    // RoutedEvent = Keyboard.PreviewKeyUpEvent
-                }
-            }
-        }
-        private void lbTodoList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            // if (lbTodoList.SelectedItem != null)
-            // {
-            //     var proc = (lbTodoList.SelectedItem as DesktopWindow);
-            //     WinAPI.SetForegroundWindow(proc.ProcessId);
-            // }
-
-        }
-
     }
 }
