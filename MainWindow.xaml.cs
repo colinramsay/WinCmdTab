@@ -31,6 +31,10 @@ namespace WinCmdTab
             });
 
             this.KeyUp += new KeyEventHandler(onKeyUp);
+
+            // Required to prevent application playing a sound due to unhandled keypress
+            // https://github.com/colinramsay/WinCmdTab/issues/8
+            this.KeyDown += new KeyEventHandler((object sender, KeyEventArgs e) => e.Handled = true);
         }
 
         private void onKeyUp(object sender, KeyEventArgs e)
@@ -67,8 +71,6 @@ namespace WinCmdTab
                 this.Activate();
 
                 lbTodoList.SelectedIndex = 1;
-
-                // dispatcherTimer.Start();
             }
             // If the window is already visible:
             // - Move to next item in list
