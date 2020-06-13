@@ -20,7 +20,14 @@ namespace WinCmdTab
 
             Hook.GlobalEvents().OnCombination(new Dictionary<Combination, Action>
             {
-                {Combination.FromString("Alt+A"), HotkeyPressed},
+                {Combination.FromString("Alt+A"), () => {
+                    Console.WriteLine("Press detected (forward)");
+                    HotkeyPressed(1);
+                }},
+                {Combination.FromString("Alt+Shift+A"), () => {
+                    Console.WriteLine("Press detected (backward)");
+                    HotkeyPressed(-1);
+                }},
             });
 
             this.KeyUp += new KeyEventHandler(onKeyUp);
@@ -34,7 +41,6 @@ namespace WinCmdTab
             {
                 this.Hide();
 
-
                 if (lbTodoList.SelectedItem != null)
                 {
                     var proc = (lbTodoList.SelectedItem as DesktopWindow);
@@ -47,14 +53,15 @@ namespace WinCmdTab
             }
         }
 
-        private void HotkeyPressed()
+        private void HotkeyPressed(int direction)
         {
-            Console.WriteLine("Press detected. Window activated? {0}", WinAPI.ApplicationIsActivated(Process.GetCurrentProcess().Id));
+            var activated = WinAPI.ApplicationIsActivated(Process.GetCurrentProcess().Id);
+            Console.WriteLine("Window activated? {0}.", activated);
 
             // If the window is not already visible:
             // - make it visble/foregrounded
             // - ensure the **second** item in the list (index = 1) is selected
-            if (!WinAPI.ApplicationIsActivated(Process.GetCurrentProcess().Id))
+            if (!activated)
             {
                 this.Show();
                 this.Activate();
@@ -74,7 +81,7 @@ namespace WinCmdTab
                 }
                 else
                 {
-                    lbTodoList.SelectedIndex++;
+                    lbTodoList.SelectedIndex = lbTodoList.SelectedIndex + direction;
                 }
             }
         }
